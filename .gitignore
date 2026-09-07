@@ -1,0 +1,24 @@
+STM32CubeIDE
+.loadpath
+
+# Build output
+Debug/
+Release/
+build/
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+
+# IDE metadata
+*.launch
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.bak
