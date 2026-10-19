@@ -155,40 +155,52 @@ flowchart TD
     I --> S4
 
     I -->|"StdID 0x100, DLC = 8"| A
+
 ```
 
 
-##⚙️ Motor Control Logic Flowchart
+## ⚙️ Motor Control Logic Flowchart
 
+```mermaid
 flowchart TD
+    A["PedalTask: pedalPercent"] --> C
+    B["TemperatureTask: temperatureC"] --> C
+    X["CanTask: enable, maxRPM, lastCommandTick, faultCode"] --> C
 
-    A[PedalTask<br>pedalPercent] --> C
-    B[TemperatureTask<br>temperatureC] --> C
-    X[CanTask<br>enable, maxRPM, lastCommandTick, faultCode] --> C
+    C["ControlTask: 20 ms loop"] --> D{"Over-temperature?"}
 
-    C[ControlTask<br>20 ms loop] --> D{Over‑temperature?}
-    D -->|Yes| F[Set Fault = OVERTEMPERATURE<br>Disable Motor]
-    D -->|No| E{CAN Timeout or No Command?}
+    D -->|Yes| F["Set OVERTEMPERATURE fault<br/>Disable motor"]
+    D -->|No| E{"CAN timeout or no command?"}
 
-    E -->|Yes| G[Set Fault = CAN_TIMEOUT<br>Disable Motor]
-    E -->|No| H{Command Valid?}
+    E -->|Yes| G["Set CAN_TIMEOUT fault<br/>Disable motor"]
+    E -->|No| H{"Command valid?"}
 
-    H -->|No| I[Set Fault = INVALID_COMMAND<br>Disable Motor]
-    H -->|Yes| J[Compute pedalRPM = pedalPercent × MAX_RPM]
+    H -->|No| I["Set INVALID_COMMAND fault<br/>Disable motor"]
+    H -->|Yes| J["Compute pedalRPM = pedalPercent × MAX_RPM"]
 
-    J --> K[Clamp pedalRPM to CAN maxRPM]
-    K --> L[finalRPM = pedalRPM if enabled]
+    J --> K["Clamp pedalRPM to CAN maxRPM"]
+    K --> L{"Motor enabled?"}
 
-    L --> M[Update requestedRPMStatus]
-    M --> N[Reset MotorCommandQueue]
-    N --> O[Send desiredSpeedRPM to PWMTask]
+    L -->|Yes| M["finalRPM = pedalRPM"]
+    L -->|No| N["finalRPM = 0"]
 
-    O --> P[PWMTask<br>Apply PWM Duty Cycle]
-    P --> Q{timingPending?}
-    Q -->|Yes| R[Compute CAN→PWM latency<br>UART print]
-    Q -->|No| S[Continue]
+    M --> O["Update requestedRPMStatus"]
+    N --> O
 
-    P --> T[CAN_TransmitStatus<br>every 100 ms]
+    O --> P["Reset MotorCommandQueue"]
+    P --> R["Send desiredSpeedRPM to PWMTask"]
+
+    R --> S["PWMTask: Apply PWM duty cycle"]
+    S --> T{"timingPending?"}
+
+    T -->|Yes| U["Compute CAN-to-PWM latency<br/>UART print"]
+    T -->|No| V["Continue"]
+
+    S --> W["Transmit CAN status every 100 ms"]
+```
+
+
+
 
 ## 🧪 Testing Workflow
 
