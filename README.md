@@ -75,6 +75,8 @@ gantt
     section PWMTask (event-driven)
     Apply PWM on new RPM        :done, 5, 0
 
+```
+
 
 ## 📡 CAN Protocol
 
