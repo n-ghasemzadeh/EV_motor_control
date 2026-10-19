@@ -38,43 +38,43 @@ The system receives commands over CAN (ID **0x200**) and publishes status frames
 
 ---
 
+
 ## ⏱ FreeRTOS Task Timing Diagram
 
-```mermaid
+```mermaid id="r4z1kv"
 gantt
-    dateFormat  X
-    axisFormat  %L
-    title EV Motor Control – FreeRTOS Task Timing Diagram
+    title EV Motor Control - FreeRTOS Task Timing
+    dateFormat X
+    axisFormat %L
 
     section PedalTask (10 ms)
-    ADC Channel 0 Read        :active, 0, 10
-    ADC Channel 0 Read        :active, 10, 20
-    ADC Channel 0 Read        :active, 20, 30
-    ADC Channel 0 Read        :active, 30, 40
-    ADC Channel 0 Read        :active, 40, 50
-    ADC Channel 0 Read        :active, 50, 60
-    ADC Channel 0 Read        :active, 60, 70
-    ADC Channel 0 Read        :active, 70, 80
-    ADC Channel 0 Read        :active, 80, 90
-    ADC Channel 0 Read        :active, 90, 100
+    ADC Read 1 :active, 0, 10
+    ADC Read 2 :active, 10, 20
+    ADC Read 3 :active, 20, 30
+    ADC Read 4 :active, 30, 40
+    ADC Read 5 :active, 40, 50
+    ADC Read 6 :active, 50, 60
+    ADC Read 7 :active, 60, 70
+    ADC Read 8 :active, 70, 80
+    ADC Read 9 :active, 80, 90
+    ADC Read 10 :active, 90, 100
 
     section TemperatureTask (100 ms)
-    ADC Channel 1 Read        :active, 0, 100
+    Temperature ADC Read :active, 0, 100
 
     section ControlTask (20 ms)
-    Control Logic             :active, 0, 20
-    Control Logic             :active, 20, 40
-    Control Logic             :active, 40, 60
-    Control Logic             :active, 60, 80
-    Control Logic             :active, 80, 100
+    Control Cycle 1 :active, 0, 20
+    Control Cycle 2 :active, 20, 40
+    Control Cycle 3 :active, 40, 60
+    Control Cycle 4 :active, 60, 80
+    Control Cycle 5 :active, 80, 100
 
     section CanTask
-    CAN RX Polling (continuous) :crit, 0, 100
-    Status TX (100 ms)          :milestone, 100, 0
+    CAN RX Polling :crit, 0, 100
+    Status TX :active, 90, 100
 
-    section PWMTask (event-driven)
-    Apply PWM on new RPM        :done, 5, 0
-
+    section PWMTask
+    Apply PWM :active, 5, 10
 ```
 
 
