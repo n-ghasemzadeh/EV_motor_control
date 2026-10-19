@@ -234,24 +234,31 @@ flowchart TD
 - No missed dealines or queue overflows observed during extended testing.
 
 
+
 ## 📁 Repository Structure
 
+```text
 EV_motor_control/
-│
-├── EV_motor_control_CAN1/        ← Completed project (this branch)
-│   ├── Core/
-│   ├── Drivers/
-│   ├── Middlewares/
-│   ├── STM32CubeIDE/
+├── Core/
 │   ├── Inc/
-│   ├── Src/
-│   ├── .gitignore
-│   ├── .project
-│   ├── .cproject
-│   ├── README.md
-│   └── (STM32CubeIDE generated files)
-│
-└── (Original project stored in main/master branch)
+│   └── Src/
+├── Drivers/
+│   ├── CMSIS/
+│   └── STM32F4xx_HAL_Driver/
+├── Middlewares/
+├── .settings/
+├── .gitignore
+├── .project
+├── .cproject
+├── EV_motor_control_CAN1l.ioc
+├── STM32F446RETX_FLASH.ld
+├── STM32F446RETX_RAM.ld
+└── README.md
+```
+
+- **`completed-version` branch:** Completed EV motor-control project with CAN communication, FreeRTOS tasks, and PWM control.
+- **`main` branch:** Original project version.
+```
 
 
 
