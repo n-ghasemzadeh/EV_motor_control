@@ -106,16 +106,18 @@ Invalid frames trigger:
 | 7    | Fault code                               |
 
 
+
 ## 📡 CAN Protocol Diagram
 
+```mermaid
 flowchart TD
-    A[CAN Bus] -->|StdID 0x200<br>DLC = 8| B[STM32 CAN RX<br>(CanTask)]
+    A["CAN Bus"] -->|"StdID 0x200, DLC = 8"| B["STM32 CAN RX (CanTask)"]
 
-    subgraph Incoming Command Frame (0x200)
-        C0[Byte 0: Enable (0 or 1)]
-        C1[Bytes 1-2: Max RPM Limit (uint16)]
-        C2[Byte 3: Mode (must be 0)]
-        C3[Bytes 4-7: Reserved (must be 0)]
+    subgraph Incoming["Incoming Command Frame (0x200)"]
+        C0["Byte 0: Enable (0 or 1)"]
+        C1["Bytes 1-2: Max RPM Limit (uint16)"]
+        C2["Byte 3: Mode (must be 0)"]
+        C3["Bytes 4-7: Reserved (must be 0)"]
     end
 
     B --> C0
@@ -123,23 +125,28 @@ flowchart TD
     B --> C2
     B --> C3
 
-    C0 --> D[Validate Command]
+    C0 --> D["Validate Command"]
     C1 --> D
     C2 --> D
     C3 --> D
 
-    D -->|Valid| E[Update State<br>canEnableRequest<br>canMaxRPM<br>lastCanCommandTick]
-    D -->|Invalid| F[Set Fault<br>FAULT_INVALID_COMMAND]
+    D -->|Valid| E["Update State: canEnableRequest, canMaxRPM, lastCanCommandTick"]
+    D -->|Invalid| F["Set Fault: FAULT_INVALID_COMMAND"]
 
-    E --> G[ControlTask<br>RPM Calculation]
+    E --> G["ControlTask: RPM Calculation"]
     F --> G
 
-    G --> H[PWMTask<br>Apply PWM Duty Cycle]
+    G --> H["PWMTask: Apply PWM Duty Cycle"]
 
-    %% Outgoing Status Frame
-    H -->|Periodic 100 ms| I[STM32 CAN TX<br>(CAN_TransmitStatus)]
+    H -->|"Periodic 100 ms"| I["STM32 CAN TX (CAN_TransmitStatus)"]
 
-    
+    subgraph Outgoing["Outgoing Status Frame (0x100)"]
+        S0["Bytes 0-1: Requested RPM"]
+        S1["Bytes 2-3: Measured RPM"]
+        S2["Bytes 4-5: Temperature x 0.1 C"]
+        S3["Byte 6: Status Flags"]
+        S4["Byte 7: Fault Code"]
+    end
 
     I --> S0
     I --> S1
@@ -147,7 +154,9 @@ flowchart TD
     I --> S3
     I --> S4
 
-    I -->|StdID 0x100<br>DLC = 8| A
+    I -->|"StdID 0x100, DLC = 8"| A
+```
+
 
 ##⚙️ Motor Control Logic Flowchart
 
